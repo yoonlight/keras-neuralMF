@@ -1,10 +1,9 @@
 from typing import List
 from keras.models import Sequential
-from src.base import BaseModel
 from keras import layers
+from common.model import Base
 
-
-class NeuMF(BaseModel):
+class NeuMF(Base):
     def __init__(self, user_dim: int, item_dim: int, output_dim: int = 8, nums_hiddens: List[int] = [8, 8, 8], *args, **kwargs):
         super(NeuMF, self).__init__(*args, **kwargs)
         # GMF Embedding
