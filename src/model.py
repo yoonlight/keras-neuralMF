@@ -1,18 +1,19 @@
 from typing import List
 from keras.models import Sequential
 from keras import layers
+from keras.regularizers import L2
 from common.model import Base
 
 class NeuMF(Base):
     def __init__(self, user_dim: int, item_dim: int, output_dim: int = 8, nums_hiddens: List[int] = [8, 8, 8], *args, **kwargs):
         super(NeuMF, self).__init__(*args, **kwargs)
         # GMF Embedding
-        self.P = layers.Embedding(input_dim=user_dim, output_dim=output_dim)
-        self.Q = layers.Embedding(input_dim=item_dim, output_dim=output_dim)
+        self.P = layers.Embedding(input_dim=user_dim, output_dim=output_dim, embeddings_regularizer=L2(0.001))
+        self.Q = layers.Embedding(input_dim=item_dim, output_dim=output_dim, embeddings_regularizer=L2(0.001))
 
         # MLP Embedding
-        self.U = layers.Embedding(input_dim=user_dim, output_dim=output_dim)
-        self.V = layers.Embedding(input_dim=item_dim, output_dim=output_dim)
+        self.U = layers.Embedding(input_dim=user_dim, output_dim=output_dim, embeddings_regularizer=L2(0.001))
+        self.V = layers.Embedding(input_dim=item_dim, output_dim=output_dim, embeddings_regularizer=L2(0.001))
 
         # GMF Layer
         self.element_wise = layers.Multiply()
@@ -28,7 +29,7 @@ class NeuMF(Base):
 
         # Predict Layer
         self.predict_layer = layers.Dense(
-            1, activation="sigmoid", use_bias=False)
+            1, activation="sigmoid", use_bias=False, kernel_regularizer=L2(0.001))
 
     def call(self, inputs, training=None, mask=None):
         # GMF Layer
