@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from common.plot import plot
 
-X, y, num_words_dict, _, _ = movielens.load_data(implicit=False)
+X, y, num_words_dict, _, _ = movielens.load_data(implicit=True)
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.1, random_state=42)
@@ -16,8 +16,8 @@ item_dim = num_words_dict["movie_id"]
 inputs = [layers.Input((1, )), layers.Input((1, ))]
 
 model = NeuMF(user_dim=user_dim, item_dim=item_dim)
-model.compile(optimizer="adam", loss="mse", metrics=[
-              metrics.RootMeanSquaredError()])
+model.compile(optimizer="SGD", loss="binary_crossentropy", metrics=[
+              metrics.RootMeanSquaredError(), metrics.AUC(), metrics.Precision()])
 
 model.summary(inputs=inputs, expand_nested=True)
 model.plot_model(inputs=inputs)

@@ -44,4 +44,5 @@ class NeuMF(Base):
         mlp = self.mlp(self.mlp_concat([p_mlp, q_mlp]))
 
         concat_result = self.concat_layer([gmf, mlp])
+        concat_result = layers.Flatten()(concat_result)
         return self.predict_layer(concat_result)
